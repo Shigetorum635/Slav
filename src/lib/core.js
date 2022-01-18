@@ -7,11 +7,7 @@ export const esclavos = writable([]);
 export const primeraVez = writable(true);
 export const religion = writable({});
 
-console.log(`Code is running.`)
-// Inner check for whereas user is new or not.
-const data = localStorage.getItem('data');
-console.log(data)
-if (!data) primeraVez.set(true);
+
 
 /**
  * Nombre de tu colonia, y otra informacion importante.
@@ -61,9 +57,40 @@ export function generarColonos(religion) {
         let colonoNuevo = {
             name: names[Math.floor(Math.random() * names.length)],
             surname: surnames[Math.floor(Math.random() * surnames.length)],
+            health: 100,
             edad: getRandomInt(20, 60),
             religion: religion,
+            childhood : {
+                nombre: infanciaDatos.name,
+                description: infanciaDatos.description
+            },
+            adulthood : {
+                nombre: adultezDatos.name,
+                description: adultezDatos.description
+            },
             moral: 100,
+            bodyParts: {
+                "Tongue" : true,
+                "Left Arm": true,
+                "Right Arm": true,
+                "Left Leg": true,
+                "Right Leg": true,
+                "Anus" : true,
+                "Reproductive Organ" : Math.floor(Math.random() * 2 ) === 1 ? "Penis" : "Vagina", // 1 = penis and 0 =  vagina
+                "Hands" : true
+            },
+            organs: {
+                "Left Kidney" : true,
+                "Right Kidney" : true,
+                "Liver" : true,
+                "Left Lung" : true,
+                "Right Lung" : true,
+                "Heart" : true,
+                "Stomach" : true,
+                "Lower Intestine" : true,
+                "Middle Intestine" : true,
+                "Panchreas" : true,
+            },
             stats: {
                 strength,
                 agility,
@@ -79,11 +106,6 @@ export function generarColonos(religion) {
     }
 }
 
-export function loadSaveData() {
-    let data = localStorage.getItem('data');
-    if (!data) return false;
-    return JSON.parse(data);
-}
 
 export function generarEsclavos() {
     /**

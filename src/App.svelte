@@ -1,6 +1,46 @@
 <script>
   import StartMenu from "./components/StartMenu.svelte";
-  import {primeraVez, establecimiento, colonos} from './lib/core';
+  import {
+    colonos,
+    esclavos,
+    primeraVez,
+    construcciones,
+    establecimiento,
+  } from "./lib/core";
+  let colono;
+  function loadSaveData() {
+    let data = localStorage.getItem("data");
+    if (!data) return false;
+    return JSON.parse(data);
+  }
+  function select(nombre){
+    console.log(nombre)
+    let colonoMan = $colonos.find((colono) => colono.name == nombre)
+    console.log(colonoMan)
+    console.log(`Found colono with name ${colonoMan.name}`)
+    colono =  colonoMan;
+  }
+  let data = loadSaveData();
+  if (data === false) {
+    $primeraVez = true;
+  } else {
+    $colonos = data.colonos;
+    $esclavos = data.esclavos;
+    $establecimiento = data.establecimiento;
+    $construcciones = data.construcciones;
+    $primeraVez = false;
+  }
+  setInterval(() => {
+    if ($primeraVez) return;
+
+    let JSONData = JSON.stringify({
+      colonos: $colonos,
+      esclavos: $esclavos,
+      establecimiento: $establecimiento,
+      construcciones: $construcciones,
+    });
+    localStorage.setItem("data", JSONData);
+  }, 1000);
   let isOpen = false;
 
   function openMenu() {
@@ -9,7 +49,7 @@
 </script>
 
 <main>
-  {#if !$primeraVez}
+  {#if $primeraVez}
     <StartMenu />
   {:else}
     <div class="text-center text-lg m-1 p-1">Crimenes de Guerra</div>
@@ -21,7 +61,11 @@
     <div>
       <div class="text-center m-5">
         Esclavo Actual:
-        <div class="font-bold">Ahmed</div>
+        {#if colono !== undefined}
+        <div class="font-bold">{colono.name}</div>
+        {:else}
+        "No Seleccionado"
+        {/if}
         <div
           id="yourMother"
           class="text-center grid grid-flow-col-dense overflow-x-scroll w-2/4 mx-auto"
@@ -106,12 +150,13 @@
           <div class="grid grid-flow-col-dense overflow-x-scroll">
             {#each $colonos as colonizador}
               <div class="p-3 border m-2 w-max mx-auto">
-                <div>{colonizador.nombre}</div>
-                <div>Vida: {colonizador.vida}%</div>
-                <div>{colonizador.estado}</div>
+                <div>{colonizador.name}</div>
+                <div>{colonizador.surname}</div>
+                <div>Vida: {colonizador.health}%</div>
 
                 <div class="space-y-2">
                   <div
+                    on:click={select(colonizador.name)}
                     class="bg-blue-500 p-1 border-2 hover:bg-black hover:underline selection:select-none cursor-pointer transition-all duration-500"
                   >
                     Seleccionar

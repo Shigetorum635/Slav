@@ -106,14 +106,14 @@ export const adultez = [
 
     },
     {
-        name: "Militar",
-        description: "Se convirtio en un respetado marine.",
+        name: "Veterinario",
+        description: "No de mucha utilidad en una colonia humana.",
         statsBoost: {
-            strength: 2,
-            agility: 5,
-            constitution: 3,
-            charisma: -2,
-            inestabilidad: 0
+            strength: 0,
+            agility: 3,
+            constitution: -4,
+            charisma: 0,
+            inestabilidad: 1
         }
 
     }

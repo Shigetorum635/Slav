@@ -7,15 +7,35 @@
     generarEsclavos,
     esclavos,
     primeraVez,
-establecimiento
+    establecimiento,
   } from "./../lib/core";
 
   let visible = false;
   let text = undefined;
   let usingDefault = true;
-  
+
   let colonyName;
-  let currentReligion = {};
+  let currentReligion = {
+    group: "orthodox",
+    data: {
+      icon: "fas fa-drumstick-bite",
+      name: "",
+      description:
+        "",
+      qualities: {
+        canibalism: 0,
+        slavery: 0,
+        slaughter: 0,
+        death: 0,
+        prayers: 0,
+        capture: 0,
+        children: 0,
+        sex: 0,
+        racism: 0,
+      },
+      deidity: "",
+    },
+}
 
   let editorVisible = () => {
     visible = !visible;
@@ -29,15 +49,13 @@ establecimiento
   }
 
   function createColony() {
-    const colonizadores = generarColonos(currentReligion);
-    const esclavizados = generarEsclavos();
+    generarColonos(currentReligion);
+    generarEsclavos();
     establecimiento.set({
       nombre: colonyName,
-      nomina: (esclavizados.length*10+colonizadores.length*20),
-      dinero: 2000
-    })
-    colonos.set(colonizadores);
-    esclavos.set(esclavizados);
+      nomina: $esclavos.length * 10 + $colonos.length * 20,
+      dinero: 2000,
+    });
     primeraVez.set(false);
   }
 </script>
@@ -87,6 +105,7 @@ establecimiento
     <div class="text-center text-lg font-bold mt-2">Tu Religion</div>
     <div class="text-center mx-auto">
       <input
+        bind:value={currentReligion.data.name}
         class="p-2 w-1/3 bg-black border focus:outline-none mx-auto text-center"
         type="text"
         name="nombre"
@@ -100,6 +119,7 @@ establecimiento
     </div>
     <div class="text-center mx-auto">
       <input
+        bind:value={currentReligion.data.deidity}
         class="p-2 w-1/3 bg-black border focus:outline-none mx-auto text-center"
         type="text"
         name="nombre"
@@ -110,6 +130,7 @@ establecimiento
 
     <div class="text-center mx-auto">
       <input
+        bind:value={currentReligion.denominacion}
         class="p-2 w-1/3 bg-black border focus:outline-none mx-auto text-center"
         type="text"
         name="nombre"
@@ -124,6 +145,7 @@ establecimiento
         Esclavitud:
 
         <select
+          bind:value={currentReligion.data.qualities.slavery}
           class="float-right bg-black rounded focus:outline-none"
           name="esclavitud"
           id="esclavitud"
@@ -131,12 +153,13 @@ establecimiento
           <option value="2">Honorifica</option>
           <option value="1">Ok</option>
           <option value="0">Mal</option>
-          <option value="0">Horrible</option>
+          <option value="-1">Horrible</option>
         </select>
       </div>
       <div class="p-1 border">
         Canibalismo:
         <select
+          bind:value={currentReligion.data.qualities.canibalism}
           class="bg-black rounded float-right focus:outline-none"
           name="esclavitud"
           id="esclavitud"
@@ -144,12 +167,13 @@ establecimiento
           <option value="2">Honorifico</option>
           <option value="1">Ok</option>
           <option value="0">Mal</option>
-          <option value="0">Horrible</option>
+          <option value="-1">Horrible</option>
         </select>
       </div>
       <div class="p-1 border">
         Asesinato (De otra gente):
         <select
+          bind:value={currentReligion.data.qualities.slaughter}
           class="bg-black rounded float-right focus:outline-none"
           name="esclavitud"
           id="esclavitud"
@@ -157,12 +181,13 @@ establecimiento
           <option value="2">Honorifico</option>
           <option value="1">Ok</option>
           <option value="0">Mal</option>
-          <option value="0">Horrible</option>
+          <option value="-1">Horrible</option>
         </select>
       </div>
       <div class="p-1 border">
         Muerte (De otros colonos):
         <select
+          bind:value={currentReligion.data.qualities.death}
           class="bg-black rounded float-right focus:outline-none"
           name="esclavitud"
           id="esclavitud"
@@ -170,12 +195,13 @@ establecimiento
           <option value="2">Honorifica</option>
           <option value="1">Ok</option>
           <option value="0">Mal</option>
-          <option value="0">Horrible</option>
+          <option value="-1">Horrible</option>
         </select>
       </div>
       <div class="p-1 border">
         Rezar:
         <select
+          bind:value={currentReligion.data.qualities.prayers}
           class="bg-black rounded float-right focus:outline-none"
           name="esclavitud"
           id="esclavitud"
@@ -183,12 +209,13 @@ establecimiento
           <option value="2">Honorifico</option>
           <option value="1">Ok</option>
           <option value="0">Mal</option>
-          <option value="0">Horrible</option>
+          <option value="-1">Horrible</option>
         </select>
       </div>
       <div class="p-1 border">
         Capturar (Prisioneros):
         <select
+          bind:value={currentReligion.data.qualities.capture}
           class="bg-black rounded float-right focus:outline-none"
           name="esclavitud"
           id="esclavitud"
@@ -196,12 +223,13 @@ establecimiento
           <option value="2">Honorifico</option>
           <option value="1">Ok</option>
           <option value="0">Mal</option>
-          <option value="0">Horrible</option>
+          <option value="-1">Horrible</option>
         </select>
       </div>
       <div class="p-1 border">
         Atraccion a menores:
         <select
+          bind:value={currentReligion.data.qualities.children}
           class="bg-black rounded float-right focus:outline-none"
           name="esclavitud"
           id="esclavitud"
@@ -209,12 +237,14 @@ establecimiento
           <option value="2">Honorifica</option>
           <option value="1">Ok</option>
           <option value="0">Mal</option>
-          <option value="0">Horrible</option>
+          <option value="-1">Horrible</option>
         </select>
       </div>
       <div class="p-1 border">
         Sexo:
+
         <select
+          bind:value={currentReligion.data.qualities.sex}
           class="bg-black rounded float-right focus:outline-none"
           name="esclavitud"
           id="esclavitud"
@@ -222,12 +252,13 @@ establecimiento
           <option value="2">Honorifico</option>
           <option value="1">Ok</option>
           <option value="0">Mal</option>
-          <option value="0">Horrible</option>
+          <option value="-1">Horrible</option>
         </select>
       </div>
       <div class="p-1 border">
         Racismo:
         <select
+          bind:value={currentReligion.data.qualities.racism}
           class="bg-black rounded float-right focus:outline-none"
           name="esclavitud"
           id="esclavitud"
@@ -235,12 +266,13 @@ establecimiento
           <option value="2">Honorifico</option>
           <option value="1">Ok</option>
           <option value="0">Mal</option>
-          <option value="0">Horrible</option>
+          <option value="-1">Horrible</option>
         </select>
       </div>
     </div>
   {/if}
   <div
+    on:click={createColony}
     class="text-center font-bold p-1 border w-max mx-auto my-2 hover:text-black cursor-pointer selection:select-none hover:bg-white hover:underline hover:ring-2 hover:ring-white transition-all duration-1000"
   >
     Comenzar
