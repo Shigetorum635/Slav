@@ -92,5 +92,31 @@ export const adultez = [
             inestabilidad: 0
         }
 
+    },
+    {
+        name: "Investigador",
+        description: "Se convirtio en investigador(a) y utiliza su carisma para desenvolverse facilmente..",
+        statsBoost: {
+            strength: -1,
+            agility: 2,
+            constitution: -2,
+            charisma: 3,
+            inestabilidad: -3
+        }
+
+    },
+    {
+        name: "Militar",
+        description: "Se convirtio en un respetado marine.",
+        statsBoost: {
+            strength: 2,
+            agility: 5,
+            constitution: 3,
+            charisma: -2,
+            inestabilidad: 0
+        }
+
     }
 ]
+
+

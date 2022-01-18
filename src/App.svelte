@@ -1,6 +1,6 @@
 <script>
   import StartMenu from "./components/StartMenu.svelte";
-  import {primeraVez, establecimiento, colonos} from './colonia';
+  import {primeraVez, establecimiento, colonos} from './lib/core';
   let isOpen = false;
 
   function openMenu() {

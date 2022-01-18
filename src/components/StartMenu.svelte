@@ -1,6 +1,6 @@
 <script>
   import Select from "svelte-select";
-  import { religions } from "./../religions";
+  import { religions } from "./../lib/religions";
   import {
     generarColonos,
     colonos,
@@ -8,7 +8,7 @@
     esclavos,
     primeraVez,
 establecimiento
-  } from "./../colonia";
+  } from "./../lib/core";
 
   let visible = false;
   let text = undefined;
