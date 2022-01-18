@@ -116,7 +116,3 @@ export const religions = [
   },
 ];
 
-export function randomizeReligion() {
-  return religions[Math.floor(Math.random() * religions.length)];
-}
-console.log(Math.floor(Math.random() * religions.length));

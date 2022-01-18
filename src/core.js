@@ -1,14 +1,15 @@
 import { writable } from 'svelte/store';
-import { names, surnames } from './names';
-import { infancia, adultez } from './backStories'
-import { religions } from './religions';
+import { names, surnames } from './lib/names';
+import { infancia, adultez } from './lib/backStories'
+import { religions } from './lib/religions';
 export const colonos = writable([]);
 export const esclavos = writable([]);
 export const primeraVez = writable(true);
 export const religion = writable({});
 
-let data = localStorage.getItem('data');
-if (!data) primeraVez.set(false);
+// Inner check for whereas user is new or not.
+const data = localStorage.getItem('data');
+if (!data) primeraVez.set(true);
 
 /**
  * Nombre de tu colonia, y otra informacion importante.
@@ -45,6 +46,12 @@ export function generarColonos(religion) {
     return colonos
 }
 
+export function loadSaveData(){
+    let data = localStorage.getItem('data');
+    if(!data) return false;
+    return JSON.parse(data);
+}
+
 export function generarEsclavos() {
     let esclavos = [];
     for (let i = 0; i < 1; i++) {
@@ -63,6 +70,10 @@ export function generarEsclavos() {
     }
 
     return esclavos
+}
+
+export function randomizeReligion() {
+  return religions[Math.floor(Math.random() * religions.length)];
 }
 
 primeraVez.subscribe((value) => {
