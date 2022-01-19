@@ -56,7 +56,7 @@
       nomina: $esclavos.length * 10 + $colonos.length * 20,
       dinero: 2000,
     });
-    primeraVez.set(false);
+    $primeraVez = (false);
   }
 </script>
 

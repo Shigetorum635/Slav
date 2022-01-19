@@ -10,26 +10,38 @@
   let colono;
   function loadSaveData() {
     let data = localStorage.getItem("data");
-    if (!data) return false;
+    console.log(`DATA IS ${data}`)
+    if (!data) {
+      throw new Error('Data not found')    
+    };
     return JSON.parse(data);
   }
 
   setInterval(() => {
-    $establecimiento.money += $establecimiento.nomina;
+    try {
+      $establecimiento.dinero += $establecimiento.nomina;
+      console.log(`Nomina pagada.`);
+      console.log(`no ha habido error`)
+    } catch (err) {
+      console.log(`${err} Whoopsieeeee!!!`);
+    }
     // Todo vale dinerito asi que necesitamos la moneee
-    console.log(`Nomina pagada.`);
-  }, 1000)
-  function select(nombre){
-    console.log(nombre)
-    let colonoMan = $colonos.find((colono) => colono.name == nombre)
-    console.log(colonoMan)
-    console.log(`Found colono with name ${colonoMan.name}`)
-    colono =  colonoMan;
+  }, 1000);
+  function select(nombre) {
+    console.log(nombre);
+    let colonoMan = $colonos.find((colono) => colono.name == nombre);
+    console.log(colonoMan);
+    console.log(`Found colono with name ${colonoMan.name}`);
+    colono = colonoMan;
   }
   let data = loadSaveData();
-  if (data === false) {
+  console.log(`Loaded data with: ${data}`)
+  if (data === false || data == undefined || !data) {
+    console.log(`Data doesnt exist}`)
+
     $primeraVez = true;
   } else {
+    console.log(`Loaded data, ${data.colonos}`)
     $colonos = data.colonos;
     $esclavos = data.esclavos;
     $establecimiento = data.establecimiento;
@@ -45,17 +57,32 @@
       establecimiento: $establecimiento,
       construcciones: $construcciones,
     });
-    localStorage.setItem("data", JSONData);
+    document.localStorage["data"] = JSONData;
   }, 1000);
   let isOpen = false;
 
   function openMenu() {
     isOpen = !isOpen;
   }
+
+  function deleteSave() {
+
+    try {
+      colonos.set([]);
+      esclavos.set([]);
+      establecimiento.set({});
+      construcciones.set([]);
+      primeraVez.set(true);
+      localStorage.clear(); // Fuck i
+      console.log("Data remvoed");
+    } catch (error) {
+      console.log(error);
+    }
+  }
 </script>
 
 <main>
-  {#if $primeraVez}
+  {#if $primeraVez || $colonos == undefined}
     <StartMenu />
   {:else}
     <div class="text-center text-lg m-1 p-1">Crimenes de Guerra</div>
@@ -64,13 +91,20 @@
     >
       Un juego de Izan Larumbe
     </div>
+    <div
+      on:click={deleteSave}
+      class="cursor-pointer transition-all duration-500  hover:ring ring-red-700 w-max  m-5 text-white font-bold p-1 bg-red-500 text-xl mx-auto text-center"
+    >
+      Borrar Partida
+    </div>
+
     <div>
       <div class="text-center m-5">
         Esclavo Actual:
         {#if colono !== undefined}
-        <div class="font-bold">{colono.name}</div>
+          <div class="font-bold">{colono.name}</div>
         {:else}
-        "No Seleccionado"
+          "No Seleccionado"
         {/if}
         <div
           id="yourMother"
@@ -89,12 +123,35 @@
         <div class="border w-2/4 mx-auto text-justify">
           <div class="grid grid-cols-2">
             <div class="m-1 p-1">
-              <div class="m-2 w-max border-b-4">Vida: 100%</div>
-              <div class="m-2 w-max border-b-4">Moral: 100%</div>
-              <div class="m-2 w-max border-b-4">Hambre: Bien alimentado</div>
-              <div class="m-2 w-max border-b-4">
-                Pensamiento: "Busco libertad"
-              </div>
+              {#if colono !== undefined}
+                <div class="m-2 w-max border-b-4">Vida: {colono.health}%</div>
+                <div class="m-2 w-max border-b-4">Moral: {colono.moral}%</div>
+                <div class="m-2 w-max border-b-4">
+                  Hambre:
+                  {#if colono.hunger >= 90}
+                    Bien Alimentado
+                  {:else if colono.hunger < 90 && colono.hunger > 80}
+                    Correctamente alimentado
+                  {:else if colono.hunger < 80 && colono.hunger > 50}
+                    Algo hambrieto
+                  {:else if colono.hunger < 50 && colono.hunger > 30}
+                    Hambriento
+                  {:else if colono.hunger < 30 && colono.hunger > 20}
+                    Bastante hambriento
+                  {:else if colono.hunger < 20 && colono.hunger > 10}
+                    Muy hambriento
+                  {:else if colono.hunger < 10 && colono.hunger > 0}
+                    Extremadamente hambriento
+                  {:else if colono.hunger === 0}
+                    Muerto de hambre.
+                  {/if}
+                </div>
+                <div class="m-2 w-max border-b-4">
+                  Pensamiento: "Busco libertad"
+                </div>
+              {:else}
+                <div>Selecciona</div>
+              {/if}
               <div
                 class="m-2 w-max hover:underline cursor-pointer selection:select-none"
                 on:click={openMenu}
