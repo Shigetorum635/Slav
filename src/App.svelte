@@ -13,6 +13,12 @@
     if (!data) return false;
     return JSON.parse(data);
   }
+
+  setInterval(() => {
+    $establecimiento.money += $establecimiento.nomina;
+    // Todo vale dinerito asi que necesitamos la moneee
+    console.log(`Nomina pagada.`);
+  }, 1000)
   function select(nombre){
     console.log(nombre)
     let colonoMan = $colonos.find((colono) => colono.name == nombre)
