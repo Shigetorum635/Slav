@@ -7,7 +7,7 @@
     construcciones,
     establecimiento,
   } from "./lib/core";
-
+  import { Logger } from "./lib/log";
   let colono;
 
   function loadSaveData() {
@@ -20,28 +20,57 @@
     try {
       if ($primeraVez == true) return;
       $establecimiento.dinero += $establecimiento.nomina;
-      console.log(`Nomina pagada. ${$primeraVez}`);
-      console.log(`no ha habido error`);
+      Logger.info(
+        `Injectado Nomina || {$primeraVez = ${$primeraVez}}`,
+        "App.svelte",
+        "Intervalo::Infrastructura"
+      );
     } catch (err) {
-      console.log(`${err} Whoopsieeeee!!!`);
+      Logger.error(
+        "Error injectando Nomina,",
+        "App.svelte",
+        "Intervalo::Infrastructura"
+      );
     }
     // Todo vale dinerito asi que necesitamos la moneee
   }, 1000);
-  function select(nombre) {
-    console.log(nombre);
-    let colonoMan = $colonos.find((colono) => colono.name == nombre);
-    console.log(colonoMan);
-    console.log(`Found colono with name ${colonoMan.name}`);
+  function select(nombre, isSlave) {
+    if(!isSlave) {
+      let colonoMan = $colonos.find((colono) => colono.name == nombre);
+    Logger.info(
+      `Encontrado colono con nombre ${nombre}`,
+      "App.svelte",
+      "Finder::Colono"
+    );
+    return colono = colonoMan;
+    }
+    let colonoMan = $esclavos.find((colono) => colono.name == nombre);
+    Logger.info(
+      `Encontrado colono con nombre ${nombre}`,
+      "App.svelte",
+      "Finder::Colono"
+    );
     colono = colonoMan;
-  }
-  let data = loadSaveData();
-  console.log(`Loaded data with: ${data}`);
-  if (data === false || data == undefined || !data) {
-    console.log(`Data doesnt exist}`);
 
+  }
+
+  const killColono = (nombre) => {
+    let index = $colonos.findIndex((x) => x.name === nombre);
+    $colonos.splice(index, 1);
+    $colonos = $colonos;
+  };
+  const killEsclavo = (nombre) => {
+    let index = $esclavos.findIndex((x) => x.name === nombre);
+    $esclavos.splice(index, 1);
+    $esclavos = $esclavos;
+  };
+
+  let data = loadSaveData();
+
+  if (data === false || data == undefined || !data) {
     $primeraVez = true;
   } else {
-    console.log(`Loaded data, ${data.colonos}`);
+    Logger.info(`Cargado datos.`, "App.svelte", "Data::Loader");
     $colonos = data.colonos;
     $esclavos = data.esclavos;
     $establecimiento = data.establecimiento;
@@ -73,7 +102,7 @@
       construcciones.set([]);
       primeraVez.set(true);
       localStorage.clear(); // Fuck i
-      console.log("Data remvoed");
+      Logger.info(`Datos borrados.`, "App.svelte", "Data::Burner");
     } catch (error) {
       console.log(error);
     }
@@ -81,7 +110,7 @@
 </script>
 
 <main>
-  {#if $primeraVez || $colonos == undefined}
+  {#if $primeraVez}
     <StartMenu />
   {:else}
     <div class="text-center text-lg m-1 p-1">Crimenes de Guerra</div>
@@ -99,8 +128,12 @@
 
     <div>
       <div class="text-center m-5">
-        Esclavo Actual:
         {#if colono !== undefined}
+
+        {#if colono.colonist == false} 
+        Esclavo Actual: 
+        {:else} 
+        Colonista Actual:  {/if}
           <div class="font-bold">{colono.name}</div>
         {:else}
           "No Seleccionado"
@@ -159,6 +192,7 @@
               </div>
             </div>
             <div class="p-1 m-1">
+              {#if colono}
               <div
                 class="cursor-pointer  selection:select-none border-4 border-black p-1 m-1 mx-auto border-b-green-500 transition-all duration-100 transform-cpu hover:-translate-x-5"
               >
@@ -174,11 +208,22 @@
               >
                 Otros
               </div>
+              {#if colono.colonist == false}
               <div
+              on:click={killEsclavo(colono.name)}
                 class="cursor-pointer  selection:select-none border-4 border-black p-1 m-1 mx-auto border-b-red-500 transition-all duration-100 transform-cpu hover:-translate-x-5"
               >
                 Matar
               </div>
+              {:else} 
+              <div
+              on:click={killColono(colono.name)}
+                class="cursor-pointer  selection:select-none border-4 border-black p-1 m-1 mx-auto border-b-red-500 transition-all duration-100 transform-cpu hover:-translate-x-5"
+              >
+                Matar
+              </div>]
+              {/if}
+              {/if}
             </div>
           </div>
         </div>
@@ -188,22 +233,52 @@
           <div class="font-bold underline">Mas Informacion</div>
           <div class="grid grid-cols-2">
             <div class="text-justify p-2 m-2">
-              <div>Edad: 32 Anos</div>
-              <div>Religion: Akiseitas</div>
-              <div>Colonia de Origen: Barbarios</div>
-              <div>Nivel de submission: 74%</div>
+              <div>Edad: {colono.edad}</div>
+              <div>Religion: {colono.religion.name}</div>
+              {#if colono.colonist == false}
+                <div>Nivel de submission: {colono.submission}%</div>
+              {/if}
+
+              <div>Infancia: {colono.childhood.nombre}</div>
+              <p class="text-left font-thing italic ">
+                {colono.childhood.description}
+              </p>
+              <div>Infancia: {colono.adulthood.nombre}</div>
+              <p class="text-left font-thing italic ">
+                {colono.adulthood.description}
+              </p>
             </div>
             <div>
               <div class="font-bold underline">Miembros</div>
-
-              <div class="text-green-500">Ano</div>
-
-              <div class="text-green-500">Lengua</div>
-
-              <div class="text-green-500">Brazos</div>
-              <div class="text-green-500">Piernas</div>
+              {#each Object.entries(colono.bodyParts) as [partName, partStatus]}
+                {#if partStatus == true || partStatus == 1 || partStatus == 0}
+                  <div class="text-green-500">{partName}</div>
+                {:else if partStatus == false || partStatus <= 0}
+                  <div class="text-red-500">{partName}</div>
+                {/if}
+              {/each}
             </div>
           </div>
+        </div>
+        <div class="text-center border w-2/4 mx-auto ">
+          <div class="font-bold underline">Habilidades</div>
+          {#each Object.entries(colono.stats) as [stat, valor]}
+            {#if valor <= 0}
+              <div class="text-white bg-red-500 p-1 m-1 w-2/4 mx-auto">
+                {stat} => {valor}
+              </div>
+            {:else if valor >= 10}
+              <div
+                class="bg-yellow-500 text-white font-bold p-1 m-1 w-2/4 mx-auto"
+              >
+                {stat} => {valor}
+              </div>
+            {:else}
+              <div class="text-white font-bold p-1 m-1 w-2/4 mx-auto">
+                {stat} => {valor}
+              </div>
+            {/if}
+          {/each}
         </div>
       {/if}
       <div class="grid grid-cols-2 w-2/4 mx-auto">
@@ -218,13 +293,14 @@
 
                 <div class="space-y-2">
                   <div
-                    on:click={select(colonizador.name)}
+                    on:click={select(colonizador.name, false)}
                     class="bg-blue-500 p-1 border-2 hover:bg-black hover:underline selection:select-none cursor-pointer transition-all duration-500"
                   >
                     Seleccionar
                   </div>
                   <div
                     class="bg-red-500 p-1 border-2 hover:bg-black hover:underline selection:select-none cursor-pointer transition-all duration-500"
+                    on:click={killColono(colonizador.name)}
                   >
                     Matar
                   </div>
@@ -237,23 +313,28 @@
         <div class="border container mx-auto text-center">
           <div class="font-bold underline">Esclavos</div>
           <div class="grid grid-flow-col-dense overflow-x-scroll">
-            <div class="p-3 border m-2 w-max mx-auto">
-              <div>Ahmed</div>
-              <div>Vida 100%</div>
-              <div>Estado Normal</div>
-              <div class="space-y-2">
-                <div
-                  class="bg-blue-500 p-1 border-2 hover:bg-black hover:underline selection:select-none cursor-pointer transition-all duration-500"
-                >
-                  Seleccionar
-                </div>
-                <div
-                  class="bg-red-500 p-1 border-2 hover:bg-black hover:underline selection:select-none cursor-pointer transition-all duration-500"
-                >
-                  Matar
+            {#each $esclavos as colonizador}
+              <div class="p-3 border m-2 w-max mx-auto">
+                <div>{colonizador.name}</div>
+                <div>{colonizador.surname}</div>
+                <div>Vida: {colonizador.health}%</div>
+
+                <div class="space-y-2">
+                  <div
+                    on:click={select(colonizador.name, true)}
+                    class="bg-blue-500 p-1 border-2 hover:bg-black hover:underline selection:select-none cursor-pointer transition-all duration-500"
+                  >
+                    Seleccionar
+                  </div>
+                  <div
+                    class="bg-red-500 p-1 border-2 hover:bg-black hover:underline selection:select-none cursor-pointer transition-all duration-500"
+                    on:click={killEsclavo(colonizador.name)}
+                  >
+                    Matar
+                  </div>
                 </div>
               </div>
-            </div>
+            {/each}
           </div>
         </div>
       </div>
