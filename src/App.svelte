@@ -11,16 +11,16 @@
   function loadSaveData() {
     let data = localStorage.getItem("data");
     console.log(`DATA IS ${data}`)
-    if (!data) {
-      throw new Error('Data not found')    
-    };
+    
     return JSON.parse(data);
   }
 
   setInterval(() => {
+    if($primeraVez == true) return console.log(`no.`)
     try {
+      if($primeraVez == true) return;
       $establecimiento.dinero += $establecimiento.nomina;
-      console.log(`Nomina pagada.`);
+      console.log(`Nomina pagada. ${$primeraVez}`);
       console.log(`no ha habido error`)
     } catch (err) {
       console.log(`${err} Whoopsieeeee!!!`);
@@ -57,7 +57,7 @@
       establecimiento: $establecimiento,
       construcciones: $construcciones,
     });
-    document.localStorage["data"] = JSONData;
+    localStorage.setItem("data", JSONData);
   }, 1000);
   let isOpen = false;
 
