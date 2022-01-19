@@ -7,21 +7,21 @@
     construcciones,
     establecimiento,
   } from "./lib/core";
+
   let colono;
+
   function loadSaveData() {
     let data = localStorage.getItem("data");
-    console.log(`DATA IS ${data}`)
-    
     return JSON.parse(data);
   }
 
   setInterval(() => {
-    if($primeraVez == true) return console.log(`no.`)
+    if ($primeraVez == true) return console.log(`no.`);
     try {
-      if($primeraVez == true) return;
+      if ($primeraVez == true) return;
       $establecimiento.dinero += $establecimiento.nomina;
       console.log(`Nomina pagada. ${$primeraVez}`);
-      console.log(`no ha habido error`)
+      console.log(`no ha habido error`);
     } catch (err) {
       console.log(`${err} Whoopsieeeee!!!`);
     }
@@ -35,13 +35,13 @@
     colono = colonoMan;
   }
   let data = loadSaveData();
-  console.log(`Loaded data with: ${data}`)
+  console.log(`Loaded data with: ${data}`);
   if (data === false || data == undefined || !data) {
-    console.log(`Data doesnt exist}`)
+    console.log(`Data doesnt exist}`);
 
     $primeraVez = true;
   } else {
-    console.log(`Loaded data, ${data.colonos}`)
+    console.log(`Loaded data, ${data.colonos}`);
     $colonos = data.colonos;
     $esclavos = data.esclavos;
     $establecimiento = data.establecimiento;
@@ -66,7 +66,6 @@
   }
 
   function deleteSave() {
-
     try {
       colonos.set([]);
       esclavos.set([]);

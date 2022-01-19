@@ -20,8 +20,7 @@
     data: {
       icon: "fas fa-drumstick-bite",
       name: "",
-      description:
-        "",
+      description: "",
       qualities: {
         canibalism: 0,
         slavery: 0,
@@ -35,7 +34,7 @@
       },
       deidity: "",
     },
-}
+  };
 
   let editorVisible = () => {
     visible = !visible;
@@ -56,7 +55,7 @@
       nomina: $esclavos.length * 10 + $colonos.length * 20,
       dinero: 2000,
     });
-    $primeraVez = (false);
+    $primeraVez = false;
   }
 </script>
 

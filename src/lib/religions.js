@@ -99,7 +99,8 @@ export const religions = [
     data: {
       icon: "fab fa-angellist",
       name: "Ministicism",
-      description: "Una religion no religion. Cientologia en su maximo explendor!",
+      description:
+        "Una religion no religion. Cientologia en su maximo explendor!",
       qualities: {
         canibalism: -1,
         slavery: -1,
@@ -115,4 +116,3 @@ export const religions = [
     },
   },
 ];
-
