@@ -8,7 +8,7 @@
     esclavos,
     primeraVez,
     establecimiento,
-  } from "./../lib/core";
+  } from "./../lib/cTore";
 
   let visible = false;
   let text = undefined;
@@ -55,7 +55,7 @@
       nomina: $esclavos.length * 10 + $colonos.length * 20,
       dinero: 2000,
     });
-    $primeraVez = false;
+    primeraVez.set(false)
   }
 </script>
 

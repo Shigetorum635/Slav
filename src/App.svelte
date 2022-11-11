@@ -6,7 +6,7 @@
     primeraVez,
     construcciones,
     establecimiento,
-  } from "./lib/core";
+  } from "./lib/cTore";
   import { Logger } from "./lib/log";
   let colono;
 
@@ -16,7 +16,6 @@
   }
 
   setInterval(() => {
-    if ($primeraVez == true) return console.log(`no.`);
     try {
       if ($primeraVez == true) return;
       $establecimiento.dinero += $establecimiento.nomina;
